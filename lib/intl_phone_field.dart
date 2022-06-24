@@ -237,6 +237,10 @@ class IntlPhoneField extends StatefulWidget {
   /// If unset, defaults to [EdgeInsets.zero].
   final EdgeInsets flagsButtonMargin;
 
+  /// A list of strings the helps the autofill service identify the type
+  /// of this text input. Default set to [AutofillHints.telephoneNumber].
+  final Iterable<String>? autofillHints;
+
   IntlPhoneField({
     Key? key,
     this.initialCountryCode,
@@ -281,6 +285,7 @@ class IntlPhoneField extends StatefulWidget {
     this.showCursor = true,
     this.pickerDialogStyle,
     this.flagsButtonMargin = EdgeInsets.zero,
+    this.autofillHints = const [AutofillHints.telephoneNumber],
   }) : super(key: key);
 
   @override
@@ -408,8 +413,8 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       },
       validator: (value) {
         if (!widget.disableLengthCheck && value != null) {
-          return value.length >= _selectedCountry.minLength &&
-                  value.length <= _selectedCountry.maxLength
+          return value.length >= (_selectedCountry.minLength ?? 0) &&
+                  value.length <= (_selectedCountry.maxLength ?? 15)
               ? null
               : widget.invalidNumberMessage;
         }
@@ -424,6 +429,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       autofocus: widget.autofocus,
       textInputAction: widget.textInputAction,
       autovalidateMode: widget.autovalidateMode,
+      autofillHints: widget.autofillHints,
     );
   }
 
